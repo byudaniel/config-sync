@@ -7,3 +7,5 @@ class ConfigBroadcaster {
     })
   }
 }
+
+module.exports = ConfigBroadcaster

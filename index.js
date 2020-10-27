@@ -12,7 +12,7 @@ module.exports = {
     const configManager = new ConfigManager({ storage: pgStorage })
     await pgStorage.load(configManager)
     new ConfigBroadcaster({ configManager, redisInstance: redis })
-    new ConfigSubscriber({ configManager, redisInstance: redis }).subscribe()
+    await new ConfigSubscriber({ configManager, redisInstance: redis }).subscribe()
 
     return configManager
   }

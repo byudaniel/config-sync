@@ -10,6 +10,8 @@ class ConfigSubscriber {
   }
 
   subscribe() {
-    this.#redisClient.subscribe('CONFIGURATION_KEY_SET')
+    return this.#redisClient.subscribe('CONFIGURATION_KEY_SET')
   }
 }
+
+module.exports = ConfigSubscriber
