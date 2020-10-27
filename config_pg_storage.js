@@ -49,8 +49,8 @@ class ConfigPgStorage {
         )
       } else {
         await this.#pgClient.query(
-          'INSERT INTO configuration_manager_values(key, value, scope_key, scope_value) VALUES ($1, $2, $3, $4) ON CONFLICT ON CONSTRAINT key_scope_key DO UPDATE SET value = $2',
-          [key, value, scopeKey, scopeValue]
+          'INSERT INTO configuration_manager_values(key, value, scope_key, scope_value, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $5) ON CONFLICT ON CONSTRAINT key_scope_key DO UPDATE SET value = $2, updated_at = $5',
+          [key, value, scopeKey, scopeValue, new Date()]
         )
       }
     } catch (err) {
