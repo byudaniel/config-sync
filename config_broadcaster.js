@@ -3,7 +3,7 @@ class ConfigBroadcaster {
     const redisClient = redisInstance.createClient()
 
     configManager.on('key_set', (event) => {
-      redisClient.publish('CONFIGURATION_KEY_SET', event)
+      redisClient.publish('CONFIGURATION_KEY_SET', JSON.stringify(event))
     })
   }
 }

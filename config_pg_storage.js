@@ -32,24 +32,24 @@ class ConfigPgStorage {
   }
 
   async loadFromStorage(key, configManager) {
-    const rows = await pgClient.query(
+    const res = await this.#pgClient.query(
       'SELECT * FROM configuration_manager_values WHERE key = $1',
       [key]
     )
 
-    rows.forEach((row) => this.#setFromRow(row, configManager))
+    res.rows.forEach((row) => this.#setFromRow(row, configManager))
   }
 
   async saveKey(key, value, scopeKey, scopeValue) {
     try {
       if (typeof value === 'undefined') {
-        await pgClient.query(
+        await this.#pgClient.query(
           'DELETE FROM configuration_manager_values WHERE key = $ AND scope_key = $',
           [key, scopeKey]
         )
       } else {
-        await pgClient.query(
-          'INSERT INTO configuration_manager_values(key, value, scope_key, scope_value) VALUES ($1, $2, $3, $4) ON CONFLICT ON CONSTRAINT key_scope_key DO UPDATE SET value = $4',
+        await this.#pgClient.query(
+          'INSERT INTO configuration_manager_values(key, value, scope_key, scope_value) VALUES ($1, $2, $3, $4) ON CONFLICT ON CONSTRAINT key_scope_key DO UPDATE SET value = $2',
           [key, value, scopeKey, scopeValue]
         )
       }

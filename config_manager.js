@@ -57,7 +57,7 @@ class ConfigManager extends EventEmitter {
   // Retrieve key from storage
   async loadKey(key, scopes = {}) {
     if (this.#storage) {
-      await this.#storage.loadFromStorage(key)
+      await this.#storage.loadFromStorage(key, this)
     }
 
     return this.get(key, scopes)
