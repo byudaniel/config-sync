@@ -54,6 +54,15 @@ class ConfigManager extends EventEmitter {
     return get(this.#config, `${key}.${scopeKey}.${scopeValue}`)
   }
 
+  // Retrieve key from storage
+  async loadKey(key, scopes = {}) {
+    if (this.#storage) {
+      await this.#storage.loadFromStorage(key)
+    }
+
+    return this.get(key, scopes)
+  }
+
   async set(key, value, scope, opts = { silent: false, skipStorage: false }) {
     let keyScope = scope
     if (!keyScope) {

@@ -4,24 +4,37 @@ class ConfigPgStorage {
     this.#log = log
   }
 
+  #setFromRow(row, configManager) {
+    let scopeOpts = undefined
+
+    if (row.scopeKey && row.scopeValue) {
+      scopeOpts = {
+        [row.scopeKey]: row.scopeValue,
+      }
+    }
+
+    configManager.set(row.key, row.value, scopeOpts, {
+      silent: true,
+      skipStorage: true,
+    })
+  }
+
   async load(configManager) {
     const res = await this.#pgClient.query(
       'SELECT * FROM configuration_manager_values'
     )
     res.rows.forEach((row) => {
-      let scopeOpts = undefined
-
-      if (row.scopeKey && row.scopeValue) {
-        scopeOpts = {
-          [row.scopeKey]: row.scopeValue,
-        }
-      }
-
-      configManager.set(row.key, row.value, scopeOpts, {
-        silent: true,
-        skipStorage: true,
-      })
+      this.#setFromRow(row, configManager)
     })
+  }
+
+  async loadFromStorage(key, configManager) {
+    const rows = await pgClient.query(
+      'SELECT * FROM configuration_manager_values WHERE key = $1',
+      [key]
+    )
+
+    rows.forEach((row) => this.#setFromRow(row, configManager))
   }
 
   async saveKey(key, value, scopeKey, scopeValue) {
