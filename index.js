@@ -1,3 +1,4 @@
+const assert = require('assert')
 const ConfigManager = require('./config_manager')
 const ConfigPgStorage = require('./config_pg_storage')
 
@@ -8,6 +9,9 @@ module.exports = {
   ConfigPgStorage = require('./config_pg_storage'),
 
   buildConfigurationManager: async ({ pgClient, redis, log }) => {
+    assert(pgClient)
+    assert(redis)
+
     const pgStorage = new ConfigPgStorage({ pgClient, log })
     const configManager = new ConfigManager({ storage: pgStorage })
     await pgStorage.load(configManager)

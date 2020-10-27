@@ -15,6 +15,7 @@
     "redis": "^3.0.2"
   },
   "dependencies": {
+    "assert": "^2.0.0",
     "lodash.get": "^4.4.2",
     "lodash.set": "^4.3.2"
   }
