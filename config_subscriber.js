@@ -1,4 +1,6 @@
 class ConfigSubscriber {
+  #redisClient = null
+
   constructor({ configManager, redisInstance }) {
     this.#redisClient = redisInstance.createClient()
     this.#redisClient.on(

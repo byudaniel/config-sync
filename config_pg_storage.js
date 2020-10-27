@@ -1,10 +1,13 @@
 class ConfigPgStorage {
+  #pgClient = null
+  #log = null
+
   constructor({ pgClient, log = { error: console.error } }) {
     this.#pgClient = pgClient
     this.#log = log
   }
 
-  #setFromRow(row, configManager) {
+  #setFromRow = (row, configManager) => {
     let scopeOpts = undefined
 
     if (row.scopeKey && row.scopeValue) {
@@ -46,7 +49,7 @@ class ConfigPgStorage {
         )
       } else {
         await pgClient.query(
-          'INSERT INTO configuration_manager_values(key, value, scope_key, scope_value) VALUES ($1, $2, $3, $4) ON CONFLICT ON CONSTRAINT key_value_scope_key DO UPDATE SET value = $4',
+          'INSERT INTO configuration_manager_values(key, value, scope_key, scope_value) VALUES ($1, $2, $3, $4) ON CONFLICT ON CONSTRAINT key_scope_key DO UPDATE SET value = $4',
           [key, value, scopeKey, scopeValue]
         )
       }
