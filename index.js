@@ -7,9 +7,10 @@ module.exports = {
   ConfigSubscriber = require('./config_subscriber'),
   ConfigPgStorage = require('./config_pg_storage'),
 
-  buildConfigurationManager: async ({ pgClient, redis }) => {
-    const configManager = new ConfigManager()
-    new ConfigPgStorage({ pgClient, configManager }).load()
+  buildConfigurationManager: async ({ pgClient, redis, log }) => {
+    const pgStorage = new ConfigPgStorage({ pgClient, log })
+    const configManager = new ConfigManager({ storage: pgStorage })
+    await pgStorage.load(configManager)
     new ConfigBroadcaster({ configManager, redisInstance: redis })
     new ConfigSubscriber({ configManager, redisInstance: redis }).subscribe()
 

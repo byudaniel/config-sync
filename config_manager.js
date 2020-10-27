@@ -14,6 +14,13 @@ class ConfigManager extends EventEmitter {
     },
   }
 
+  #storage = null
+
+  constructor({ storage } = {}) {
+    super()
+    this.#storage = storage
+  }
+
   getHierarchy() {
     return this.#config[HIERARCHY_KEY][GLOBAL_SCOPE_KEY][GLOBAL_SCOPE_KEY]
   }
@@ -47,7 +54,7 @@ class ConfigManager extends EventEmitter {
     return get(this.#config, `${key}.${scopeKey}.${scopeValue}`)
   }
 
-  set(key, value, scope, opts = { silent: false }) {
+  async set(key, value, scope, opts = { silent: false, skipStorage: false }) {
     let keyScope = scope
     if (!keyScope) {
       keyScope = {
@@ -57,6 +64,10 @@ class ConfigManager extends EventEmitter {
 
     const [scopeKey, scopeValue] = Object.entries(keyScope)[0]
     set(this.#config, `${key}.${scopeKey}.${scopeValue}`, value)
+
+    if (!opts.skipStorage && this.#storage) {
+      await this.#storage.saveKey(key, value, scopeKey, scopeValue)
+    }
 
     if (!opts.silent) {
       this.emit('key_set', { key, value, scopeKey, scopeValue })
