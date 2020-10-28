@@ -10,17 +10,16 @@ module.exports = {
   ConfigSubscriber,
   ConfigPgStorage,
 
-  buildConfigurationManager: async ({ pgClient, redis, log }) => {
+  buildConfigurationManager: async ({ pgClient, redisConfig, log }) => {
     assert(pgClient)
-    assert(redis)
 
     const pgStorage = new ConfigPgStorage({ pgClient, log })
     const configManager = new ConfigManager({ storage: pgStorage })
     await pgStorage.load(configManager)
-    new ConfigBroadcaster({ configManager, redisInstance: redis })
+    new ConfigBroadcaster({ configManager, redisConfig })
     await new ConfigSubscriber({
       configManager,
-      redisInstance: redis,
+      redisConfig,
     }).subscribe()
 
     return configManager

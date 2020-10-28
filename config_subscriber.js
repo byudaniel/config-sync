@@ -1,8 +1,8 @@
 class ConfigSubscriber {
   #redisClient = null
 
-  constructor({ configManager, redisInstance }) {
-    this.#redisClient = redisInstance.createClient()
+  constructor({ configManager, redisConfig }) {
+    this.#redisClient = require('redis').createClient(redisConfig)
     this.#redisClient.on('message', (channel, message) => {
       const { key, value, scopeKey, scopeValue } = JSON.parse(message)
       configManager.set(

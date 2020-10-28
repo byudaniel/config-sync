@@ -75,7 +75,9 @@ class ConfigManager extends EventEmitter {
     set(this.#config, `${key}.${scopeKey}.${scopeValue}`, value)
 
     if (!opts.silent) {
-      await this.#storage.saveKey(key, value, scopeKey, scopeValue)
+      if (this.#storage) {
+        await this.#storage.saveKey(key, value, scopeKey, scopeValue)
+      }
       this.emit('key_set', { key, value, scopeKey, scopeValue })
     }
   }
