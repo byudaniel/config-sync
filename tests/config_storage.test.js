@@ -1,5 +1,4 @@
 const { Client } = require('pg')
-const redis = require('redis')
 
 const { buildConfigurationManager } = require('../index')
 
@@ -25,7 +24,7 @@ afterAll(async () => {
 })
 
 test('stores and retrieves objects', async () => {
-  const configManager = await buildConfigurationManager({ pgClient, redis })
+  const configManager = await buildConfigurationManager({ pgClient })
   await configManager.set('test', { hello: 'world' })
 
   const loadedValue = await configManager.loadKey('test')
@@ -34,7 +33,7 @@ test('stores and retrieves objects', async () => {
 })
 
 test('stores and retrieves arrays', async () => {
-  const configManager = await buildConfigurationManager({ pgClient, redis })
+  const configManager = await buildConfigurationManager({ pgClient })
   await configManager.set('test', [{ hello: 'world' }])
 
   const loadedValue = await configManager.loadKey('test')
