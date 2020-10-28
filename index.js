@@ -16,11 +16,18 @@ module.exports = {
     const pgStorage = new ConfigPgStorage({ pgClient, log })
     const configManager = new ConfigManager({ storage: pgStorage })
     await pgStorage.load(configManager)
-    new ConfigBroadcaster({ configManager, redisConfig })
-    await new ConfigSubscriber({
+    const broadcaster = new ConfigBroadcaster({ configManager, redisConfig })
+    const configSubscriber = new ConfigSubscriber({
       configManager,
       redisConfig,
-    }).subscribe()
+    })
+    await configSubscriber.subscribe()
+
+    // Close redis connections
+    configManager.dispose = () => {
+      broadcaster.dispose()
+      configSubscriber.dispose()
+    }
 
     return configManager
   },

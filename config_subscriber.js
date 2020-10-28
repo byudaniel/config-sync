@@ -17,6 +17,10 @@ class ConfigSubscriber {
   subscribe() {
     return this.#redisClient.subscribe('CONFIGURATION_KEY_SET')
   }
+
+  dispose() {
+    return this.#redisClient.quit()
+  }
 }
 
 module.exports = ConfigSubscriber

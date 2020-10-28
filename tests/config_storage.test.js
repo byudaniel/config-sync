@@ -3,6 +3,7 @@ const { Client } = require('pg')
 const { buildConfigurationManager } = require('../index')
 
 let pgClient
+let configManager
 
 beforeAll(async () => {
   pgClient = new Client({
@@ -23,8 +24,15 @@ afterAll(async () => {
   await pgClient.end()
 })
 
+beforeEach(async () => {
+  configManager = await buildConfigurationManager({ pgClient })
+})
+
+afterEach(() => {
+  configManager.dispose()
+})
+
 test('stores and retrieves objects', async () => {
-  const configManager = await buildConfigurationManager({ pgClient })
   await configManager.set('test', { hello: 'world' })
 
   const loadedValue = await configManager.loadKey('test')
@@ -33,7 +41,6 @@ test('stores and retrieves objects', async () => {
 })
 
 test('stores and retrieves arrays', async () => {
-  const configManager = await buildConfigurationManager({ pgClient })
   await configManager.set('test', [{ hello: 'world' }])
 
   const loadedValue = await configManager.loadKey('test')

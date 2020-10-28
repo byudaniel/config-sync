@@ -85,6 +85,10 @@ class ConfigManager extends EventEmitter {
   del(key, scope, opts = {}) {
     return this.set(key, undefined, scope, opts)
   }
+
+  dispose() {
+    // Intentionally empty, overriden by builder
+  }
 }
 
 module.exports = ConfigManager
