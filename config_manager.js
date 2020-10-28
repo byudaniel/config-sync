@@ -63,7 +63,7 @@ class ConfigManager extends EventEmitter {
     return this.get(key, scopes)
   }
 
-  async set(key, value, scope, opts = { silent: false, skipStorage: false }) {
+  async set(key, value, scope, opts = { silent: false }) {
     let keyScope = scope
     if (!keyScope) {
       keyScope = {
@@ -74,11 +74,8 @@ class ConfigManager extends EventEmitter {
     const [scopeKey, scopeValue] = Object.entries(keyScope)[0]
     set(this.#config, `${key}.${scopeKey}.${scopeValue}`, value)
 
-    if (!opts.skipStorage && this.#storage) {
-      await this.#storage.saveKey(key, value, scopeKey, scopeValue)
-    }
-
     if (!opts.silent) {
+      await this.#storage.saveKey(key, value, scopeKey, scopeValue)
       this.emit('key_set', { key, value, scopeKey, scopeValue })
     }
   }

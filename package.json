@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --testPathIgnorePatterns tests/",
-    "test:integration": "jest --testPathPattern tests/"
+    "test": "node node_modules/.bin/jest --testPathIgnorePatterns tests/",
+    "test:integration": "node node_modules/.bin/jest --runInBand --testPathPattern tests/"
   },
   "keywords": [],
   "author": "Daniel O'Neill",

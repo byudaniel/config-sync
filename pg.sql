@@ -2,7 +2,7 @@
 CREATE TABLE "public"."configuration_manager_values" (
     "id" serial PRIMARY KEY,
     "key" varchar,
-    "value" text,
+    "value" json,
     "scope_key" varchar,
     "scope_value" varchar,
     "created_at" TIMESTAMP,
